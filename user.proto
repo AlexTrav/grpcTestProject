@@ -1,0 +1,63 @@
+// Используем синтаксис proto3
+syntax = "proto3";
+
+// Имя пакета (влияет на пространство имён в Go)
+package userpb;
+
+// Указываем путь для сгенерированного Go-кода
+option go_package = "./userpb";
+
+// Определение gRPC-сервиса с методами
+service UserService {
+  rpc CreateUser (UserRequest) returns (UserResponse);     // Создать пользователя
+  rpc GetUser (UserID) returns (UserResponse);             // Получить пользователя по ID
+  rpc UpdateUser (UpdateRequest) returns (UserResponse);   // Обновить данные пользователя
+  rpc DeleteUser (UserID) returns (DeleteResponse);        // Удалить пользователя по ID
+  rpc ListUsers (Empty) returns (UserList);                // Получить список всех пользователей
+}
+
+// Структура данных пользователя
+message User {
+  string id = 1;       // Уникальный идентификатор (UUID)
+  string name = 2;     // Имя
+  string email = 3;    // Email
+  int32 age = 4;       // Возраст
+}
+
+// Запрос на создание пользователя
+message UserRequest {
+  string name = 1;
+  string email = 2;
+  int32 age = 3;
+}
+
+// Запрос на обновление пользователя
+message UpdateRequest {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  int32 age = 4;
+}
+
+// Запрос, содержащий только ID пользователя
+message UserID {
+  string id = 1;
+}
+
+// Ответ, содержащий одного пользователя
+message UserResponse {
+  User user = 1;
+}
+
+// Ответ на удаление
+message DeleteResponse {
+  string message = 1;
+}
+
+// Пустое сообщение (используется для запроса всех пользователей)
+message Empty {}
+
+// Список пользователей
+message UserList {
+  repeated User users = 1;
+}
